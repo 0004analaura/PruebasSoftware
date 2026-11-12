@@ -71,6 +71,26 @@ public class ClienteRepositoryTests : IDisposable
             excepcion.Message);
     }
 
+    [Fact]
+    public void ObtenerPorId_ClienteInexistente_DevuelveNull_ConSQLiteReal()
+    {
+        // Arrange: preparar el servicio con el repositorio real
+        // y registrar un cliente para que la tabla no esté vacía.
+        var service = new ClienteService(_repository);
+
+        var clienteRegistrado = service.Registrar(
+            "Ana López",
+            "ana@example.com");
+
+        var idInexistente = clienteRegistrado.Id + 1000;
+
+        // Act: consultar un identificador que no existe en SQLite.
+        var resultado = service.ObtenerPorId(idInexistente);
+
+        // Assert: el servicio debe devolver null.
+        Assert.Null(resultado);
+    }
+
 
     public void Dispose()
     {
